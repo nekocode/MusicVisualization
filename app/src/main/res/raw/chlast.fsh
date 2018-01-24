@@ -1,4 +1,4 @@
-// Modified from https://www.shadertoy.com/view/XdjyRm
+// Modified from https://www.shadertoy.com/view/Xdl3W2
 
 varying vec2 fragCoord;
 uniform vec3 iResolution;
