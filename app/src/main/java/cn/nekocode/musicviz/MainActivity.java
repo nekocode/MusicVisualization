@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ import cn.nekocode.musicviz.scene.RainbowSpectrumScene;
  */
 public class MainActivity extends AppCompatActivity implements Visualizer.OnDataCaptureListener {
     private static final int REQUEST_PERMISSION = 101;
-    private TextureView mTextureView;
+    private FrameLayout mContainerView;
     private VisualizerRenderer mRender;
     private SceneController mSceneController;
     private List<Pair<String, ? extends GLScene>> mSceneList;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements Visualizer.OnData
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(mTextureView = new TextureView(this));
+        setContentView(mContainerView = new FrameLayout(this));
 
         /*
           Check premission
@@ -107,8 +108,10 @@ public class MainActivity extends AppCompatActivity implements Visualizer.OnData
         /*
           Setup texture view
          */
-        mTextureView.setSurfaceTextureListener(mRender = new VisualizerRenderer(this, captureSize / 2));
-        mTextureView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        final TextureView textureView = new TextureView(this);
+        mContainerView.addView(textureView);
+        textureView.setSurfaceTextureListener(mRender = new VisualizerRenderer(this, captureSize / 2));
+        textureView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(
                     View v, int left, int top, int right, int bottom,
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements Visualizer.OnData
                 mRender.onSurfaceTextureSizeChanged(null, v.getWidth(), v.getHeight());
             }
         });
+        textureView.requestLayout();
 
         mRender.setSceneController(mSceneController = new SceneController() {
             @Override
